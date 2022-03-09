@@ -69,7 +69,7 @@ for para_index, parameter in enumerate(parameters_list):
     model = BaselineModel(784,parameter,10)
     SGD_optimiser = torch.optim.SGD(params=model.parameters(),lr=0.01)
     loss_function = torch.nn.CrossEntropyLoss()
-    epochs = 2
+    epochs = 20
 
 
     for epoch in range(epochs):
