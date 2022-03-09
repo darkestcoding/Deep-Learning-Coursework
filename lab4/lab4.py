@@ -59,13 +59,13 @@ def accuracy(output,labels):
 
 parameters_list = [50,250,784,2000,5000,10000,50000,200000]
 
-test_accuracy_list = []
-training_accuracy_list = []
-test_loss_list = []
-training_loss_list = []
-
 
 for para_index, parameter in enumerate(parameters_list):
+    test_accuracy_list = []
+    training_accuracy_list = []
+    test_loss_list = []
+    training_loss_list = []
+
     model = BaselineModel(784,parameter,10)
     SGD_optimiser = torch.optim.SGD(params=model.parameters(),lr=0.01)
     loss_function = torch.nn.CrossEntropyLoss()
