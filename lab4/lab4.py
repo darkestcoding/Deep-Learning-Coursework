@@ -67,7 +67,7 @@ for para_index, parameter in enumerate(parameters_list):
     training_loss_list = []
 
     model = BaselineModel(784,parameter,10)
-    SGD_optimiser = torch.optim.SGD(params=model.parameters(),lr=0.01)
+    SGD_optimiser = torch.optim.SGD(params=model.parameters(),momentum=0.9,lr=0.01)
     loss_function = torch.nn.CrossEntropyLoss()
     epochs = 20
 
@@ -101,7 +101,7 @@ for para_index, parameter in enumerate(parameters_list):
                     class_correct +=1
                 class_total += 1
         training_accuracy_list.append(class_correct/class_total)
-        training_loss_list.append(training_loss)
+        training_loss_list.append(training_loss/len(train_loader))
         print("epoch: {}, training_loss(batch avg):{} ,training_accuracy: {} ".format(epoch, training_loss/len(train_loader),class_correct/class_total))  
         
 
@@ -120,7 +120,7 @@ for para_index, parameter in enumerate(parameters_list):
                     class_correct +=1
                 class_total += 1
         test_accuracy_list.append(class_correct/class_total)
-        test_loss_list.append(test_loss)
+        test_loss_list.append(test_loss/len(test_loader))
         print("epoch: {}, test_loss(batch avg):{} ,test_accuracy: {} ".format(epoch, test_loss/len(test_loader),class_correct/class_total))
 
     fig, ax = plt.subplots(figsize = (8,4))
