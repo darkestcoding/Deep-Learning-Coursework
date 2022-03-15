@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[81]:
 
 
 import torch
@@ -48,10 +48,19 @@ class MyDataset(Dataset):
 
   def __len__(self):
       return self.size
+    
+    
+device = 0  
 
-train_data = MyDataset()
-val_data = MyDataset(size=500, random_offset=33333)
-test_data = MyDataset(size=500, random_offset=99999)
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+    
+
+train_data = MyDataset().to(device)
+val_data = MyDataset(size=500, random_offset=33333).to(device)
+test_data = MyDataset(size=500, random_offset=99999).to(device)
 
 
 # In[58]:
@@ -95,11 +104,11 @@ class CNN(nn.Module):
         return out      
 
 
-# In[75]:
+# In[79]:
 
 
 loss_func = F.mse_loss
-model = CNN()
+model = CNN().to(device)
 adam_opt = torch.optim.Adam(params=model.parameters(),lr=0.01)
 epochs = 100
 
