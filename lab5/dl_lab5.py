@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[81]:
+# In[83]:
 
 
 import torch
@@ -50,17 +50,12 @@ class MyDataset(Dataset):
       return self.size
     
     
-device = 0  
-
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-else:
-    device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
 
-train_data = MyDataset().to(device)
-val_data = MyDataset(size=500, random_offset=33333).to(device)
-test_data = MyDataset(size=500, random_offset=99999).to(device)
+train_data = MyDataset()
+val_data = MyDataset(size=500, random_offset=33333)
+test_data = MyDataset(size=500, random_offset=99999)
 
 
 # In[58]:
@@ -76,7 +71,7 @@ torch.manual_seed(seed)
 torch.backends.cudnn.deterministic = True
 
 
-# In[59]:
+# In[84]:
 
 
 transform = transforms.Compose([transforms.ToTensor()])
@@ -104,7 +99,7 @@ class CNN(nn.Module):
         return out      
 
 
-# In[79]:
+# In[86]:
 
 
 loss_func = F.mse_loss
@@ -121,7 +116,7 @@ for epoch in range(epochs):
     for batch in trainloader:
         data,targets = batch
         adam_opt.zero_grad()
-        out = model.forward(data)
+        out = model.forward(data.to(device))
         loss = loss_func(out,targets)
         loss.backward()
         loss_sum += loss
@@ -132,14 +127,14 @@ for epoch in range(epochs):
     training_loss = 0
     for batch in trainloader:
         data,targets = batch
-        out = model.forward(data)
+        out = model.forward(data.to(device))
         loss = loss_func(out,targets)
         training_loss += loss
     #test
     test_loss = 0
     for batch in testloader:
         data,targets = batch
-        out = model.forward(data)
+        out = model.forward(data.to(device))
         loss = loss_func(out,targets)
         test_loss += loss
     print("Training loss:{}, test loss: {}".format(training_loss/len(trainloader),test_loss/len(testloader)))
